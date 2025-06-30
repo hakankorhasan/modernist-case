@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct UsersView: View {
+    
+    var usersViewModel = UsersViewModel() 
+    
     var body: some View {
         VStack {
             UserCardView()

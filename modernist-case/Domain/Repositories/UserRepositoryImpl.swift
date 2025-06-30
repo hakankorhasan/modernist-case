@@ -1,0 +1,24 @@
+//
+//  UserRepository.swift
+//  modernist-case
+//
+//  Created by Hakan on 30.06.2025.
+//
+
+protocol UserRepository {
+    func fetchUsers() async throws -> [User]
+}
+
+final class UserRepositoryImpl: UserRepository {
+    
+    private let remote: UserRemoteDataSource
+    
+    init(remote: UserRemoteDataSource) {
+        self.remote = remote
+    }
+    
+    func fetchUsers() async throws -> [User] {
+        try await remote.fetchUsers()
+    }
+    
+}
