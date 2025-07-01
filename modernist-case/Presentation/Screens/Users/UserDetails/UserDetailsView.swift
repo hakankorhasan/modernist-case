@@ -7,11 +7,11 @@
 import SwiftUI
 
 struct UserDetailsView: View {
-    let user: User
+    let user: RandomUser
     
     @StateObject private var viewModel: UserDetailsViewModel
     
-    init(user: User) {
+    init(user: RandomUser) {
         self.user = user
         _viewModel = StateObject(wrappedValue: UserDetailsViewModel(user: user))
     }
@@ -20,13 +20,13 @@ struct UserDetailsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 // Name
-                Text(user.name)
+                Text("\(user.name?.title ?? "") \(user.name?.first ?? "") \(user.name?.last ?? "")")
                     .font(.largeTitle.bold())
 
                 // Username
                 HStack {
                     Image(systemName: "person.fill")
-                    Text("@\(user.username)")
+                    Text("@\(user.login?.username ?? "")")
                         .font(.subheadline)
                         .foregroundColor(.gray)
                 }
@@ -34,7 +34,7 @@ struct UserDetailsView: View {
                 // Email
                 HStack {
                     Image(systemName: "envelope.fill")
-                    Text(user.email)
+                    Text(user.email ?? "")
                         .font(.subheadline)
                         .foregroundColor(.blue)
                 }
@@ -42,7 +42,7 @@ struct UserDetailsView: View {
                 // Phone
                 HStack {
                     Image(systemName: "phone.fill")
-                    Text(user.phone)
+                    Text(user.phone ?? "")
                         .font(.subheadline)
                         .foregroundColor(.green)
                 }
@@ -52,10 +52,10 @@ struct UserDetailsView: View {
                     Text("Address")
                         .font(.headline)
 
-                    Text(user.address.street)
-                    Text(user.address.suite)
-                    Text(user.address.city)
-                    Text(user.address.zipcode)
+                    Text("Street Number: \(user.location?.street?.number ?? 0)")
+                    Text("Street Name: \(user.location?.street?.name ?? "Unknown")")
+                    Text("State: \(user.location?.state ?? "Unknown")")
+                    Text("Country: \(user.location?.country ?? "Unknown")")
                 }
                 .padding()
                 .background(Color(.systemGray6))
@@ -89,24 +89,38 @@ struct UserDetailsView: View {
 }
 
 #Preview {
-    UserDetailsView(user: User(
-        id: 1,
-         name: "Hakan Körhasan",
-         username: "hakankorhasan",
-         email: "hakankorhasann@gmail.com",
-         address: Address(
-             street: "Söğüt Sk.",
-             suite: "No:18 D:2",
-             city: "İstanbul",
-             zipcode: "34000",
-             geo: Geo(lat: "41.0082", lng: "28.9784")
-         ),
-         phone: "+905340618277",
-         website: "hakan.dev",
-         company: Company(
-             name: "OpenAI",
-             catchPhrase: "Shaping the future",
-             bs: "AI innovation"
-         )
+    UserDetailsView(user: RandomUser(
+        gender: "male",
+        name: Name(title: "Mr", first: "Hakan", last: "Körhasan"),
+        location: Location(
+            street: Street(number: 18, name: "Söğüt Sk."),
+            city: "İstanbul",
+            state: "İstanbul",
+            country: "Turkey",
+            postcode: 1234,
+            coordinates: Coordinates(latitude: "41.0082", longitude: "28.9784"),
+            timezone: Timezone(offset: "+3:00", description: "GMT+3 Istanbul")
+        ),
+        email: "hakankorhasan@example.com",
+        login: Login(
+            uuid: "123e4567-e89b-12d3-a456-426614174000",
+            username: "hakankorhasan",
+            password: "password123",
+            salt: "salt",
+            md5: "md5hash",
+            sha1: "sha1hash",
+            sha256: "sha256hash"
+        ),
+        dob: DateInfo(date: "1990-01-01T00:00:00Z", age: 35),
+        registered: DateInfo(date: "2020-01-01T00:00:00Z", age: 5),
+        phone: "+905340618277",
+        cell: "+905340618278",
+        id: ID(name: "TC", value: "12345678901"),
+        picture: Picture(
+            large: "https://randomuser.me/api/portraits/men/1.jpg",
+            medium: "https://randomuser.me/api/portraits/med/men/1.jpg",
+            thumbnail: "https://randomuser.me/api/portraits/thumb/men/1.jpg"
+        ),
+        nat: "TR"
     ))
 }

@@ -13,7 +13,7 @@ final class AddFavoriteUserUseCase {
         self.repository = repository
     }
 
-    func execute(user: User) {
+    func execute(user: RandomUser) {
         repository.add(user: user)
     }
 }

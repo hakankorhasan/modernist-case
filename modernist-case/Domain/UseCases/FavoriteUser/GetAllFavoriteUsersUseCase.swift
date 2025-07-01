@@ -14,7 +14,7 @@ final class GetAllFavoriteUsersUseCase {
         self.repository = repository
     }
 
-    func execute() -> [User] {
+    func execute() -> [RandomUser] {
         repository.getAllFavorites()
     }
 }

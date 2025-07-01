@@ -4,6 +4,10 @@
 //
 //  Created by Hakan on 1.07.2025.
 //
+//struct APIConfig {
+//    static let baseURL = "https://jsonplaceholder.typicode.com"
+//}
+
 struct APIConfig {
-    static let baseURL = "https://jsonplaceholder.typicode.com"
+    static let baseURL = "https://randomuser.me"
 }

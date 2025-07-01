@@ -13,7 +13,7 @@ final class IsFavoriteUserUseCase {
         self.repository = repository
     }
 
-    func execute(userId: Int) -> Bool {
+    func execute(userId: String) -> Bool {
         repository.isFavorite(userId: userId)
     }
 }

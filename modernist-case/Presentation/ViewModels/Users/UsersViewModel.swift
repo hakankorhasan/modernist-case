@@ -10,8 +10,8 @@ import Foundation
 @MainActor
 class UsersViewModel: ObservableObject {
     
-    @Published var users: [User] = []
-    @Published var filteredUsers: [User] = []
+    @Published var users: [RandomUser] = []
+    @Published var filteredUsers: [RandomUser] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
     @Published var searchText: String = "" {
@@ -45,7 +45,7 @@ class UsersViewModel: ObservableObject {
             filteredUsers = users
         } else {
             filteredUsers = users.filter { user in
-                user.name.lowercased().contains(searchText.lowercased())
+                user.id?.name?.lowercased().contains(searchText.lowercased()) ?? false
             }
         }
     }

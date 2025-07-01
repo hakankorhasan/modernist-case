@@ -8,25 +8,36 @@
 import Foundation
 
 enum UserAPI {
-    case getUsers
+    case getUsers(page: Int, results: Int, seed: String)
 }
 
 extension UserAPI {
     var path: String {
         switch self {
         case .getUsers:
-            return "/users"
+            return "/api/"
         }
     }
 
     var method: HTTPMethod {
         return .get
     }
-    
+
     var urlRequest: URLRequest {
-        let url = URL(string: APIConfig.baseURL + path)!
-        var request = URLRequest(url: url)
+        var components = URLComponents(string: APIConfig.baseURL + path)!
+        
+        switch self {
+        case let .getUsers(page, results, seed):
+            components.queryItems = [
+                URLQueryItem(name: "page", value: "\(page)"),
+                URLQueryItem(name: "results", value: "\(results)"),
+                URLQueryItem(name: "seed", value: seed)
+            ]
+        }
+
+        var request = URLRequest(url: components.url!)
         request.httpMethod = method.rawValue
         return request
     }
 }
+

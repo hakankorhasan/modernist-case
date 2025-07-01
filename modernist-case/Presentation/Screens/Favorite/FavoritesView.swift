@@ -22,7 +22,7 @@ struct FavoritesView: View {
                         .foregroundStyle(.gray)
                         .padding(.top, 100)
                 } else {
-                    List(viewModel.favoriteUsers) { user in
+                    List(viewModel.favoriteUsers, id: \.login?.uuid) { user in
                         NavigationLink(destination: UserDetailsView(user: user)) {
                             UserCardView(user: user)
                         }

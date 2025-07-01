@@ -11,7 +11,7 @@ import Combine
 final class UserDetailsViewModel: ObservableObject {
     
     @Published var isFavorite: Bool = false
-    @Published var favoriteUsers: [User] = []
+    @Published var favoriteUsers: [RandomUser] = []
 
     private var addFavoriteUseCase = AddFavoriteUserUseCase.shared
     private let removeFavoriteUseCase =  RemoveFavoriteUserUseCase.shared
@@ -19,16 +19,16 @@ final class UserDetailsViewModel: ObservableObject {
 
     
     private var cancellables = Set<AnyCancellable>()
-    private let user: User
+    private let user: RandomUser
     
-    init(user: User) {
+    init(user: RandomUser) {
         self.user = user
         self.checkIfFavorite()
     }
     
     func toggleFavorite() {
         if isFavorite {
-            removeFavoriteUseCase.execute(userId: user.id)
+            removeFavoriteUseCase.execute(userId: user.id?.value ?? "")
             isFavorite = false
         } else {
             addFavoriteUseCase.execute(user: user)
@@ -37,6 +37,6 @@ final class UserDetailsViewModel: ObservableObject {
     }
     
     private func checkIfFavorite() {
-        isFavorite = isFavoriteFavoriteUseCase.execute(userId: user.id)
+        isFavorite = isFavoriteFavoriteUseCase.execute(userId: user.id?.value ?? "")
     }
 }

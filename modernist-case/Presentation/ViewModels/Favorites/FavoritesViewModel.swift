@@ -10,7 +10,7 @@ import Combine
 final class FavoritesViewModel: ObservableObject {
     
     @Published var isFavorite: Bool = false
-    @Published var favoriteUsers: [User] = []
+    @Published var favoriteUsers: [RandomUser] = []
 
     private var addFavoriteUseCase = AddFavoriteUserUseCase.shared
     private let removeFavoriteUseCase =  RemoveFavoriteUserUseCase.shared

@@ -14,7 +14,7 @@ final class RemoveFavoriteUserUseCase {
         self.repository = repository
     }
 
-    func execute(userId: Int) {
+    func execute(userId: String) {
         repository.remove(userId: userId)
     }
 }

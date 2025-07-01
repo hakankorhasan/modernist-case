@@ -1,20 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23788.4" systemVersion="24F74" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
     <entity name="FavoriteUserEntity" representedClassName="FavoriteUserEntity" syncable="YES" codeGenerationType="class">
-        <attribute name="addressCity" optional="YES" attributeType="String"/>
-        <attribute name="addressStreet" optional="YES" attributeType="String"/>
-        <attribute name="addressSuite" optional="YES" attributeType="String"/>
-        <attribute name="addressZip" optional="YES" attributeType="String"/>
-        <attribute name="companyBs" optional="YES" attributeType="String"/>
-        <attribute name="companyCatchPhrase" optional="YES" attributeType="String"/>
-        <attribute name="companyName" optional="YES" attributeType="String"/>
+        <attribute name="birthAge" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="birthDate" optional="YES" attributeType="String"/>
+        <attribute name="cell" optional="YES" attributeType="String"/>
+        <attribute name="city" optional="YES" attributeType="String"/>
+        <attribute name="country" optional="YES" attributeType="String"/>
         <attribute name="email" optional="YES" attributeType="String"/>
-        <attribute name="geoLat" optional="YES" attributeType="String"/>
-        <attribute name="geoLng" optional="YES" attributeType="String"/>
-        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="firstName" optional="YES" attributeType="String"/>
+        <attribute name="gender" optional="YES" attributeType="String"/>
+        <attribute name="idName" optional="YES" attributeType="String"/>
+        <attribute name="idValue" optional="YES" attributeType="String"/>
+        <attribute name="lastName" optional="YES" attributeType="String"/>
+        <attribute name="latitude" optional="YES" attributeType="String"/>
+        <attribute name="longitude" optional="YES" attributeType="String"/>
+        <attribute name="md5" optional="YES" attributeType="String"/>
+        <attribute name="nat" optional="YES" attributeType="String"/>
+        <attribute name="password" optional="YES" attributeType="String"/>
         <attribute name="phone" optional="YES" attributeType="String"/>
+        <attribute name="pictureLarge" optional="YES" attributeType="String"/>
+        <attribute name="pictureMedium" optional="YES" attributeType="String"/>
+        <attribute name="pictureThumbnail" optional="YES" attributeType="String"/>
+        <attribute name="postcode" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="registeredAge" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="registeredDate" optional="YES" attributeType="String"/>
+        <attribute name="salt" optional="YES" attributeType="String"/>
+        <attribute name="sha1" optional="YES" attributeType="String"/>
+        <attribute name="sha256" optional="YES" attributeType="String"/>
+        <attribute name="state" optional="YES" attributeType="String"/>
+        <attribute name="streetName" optional="YES" attributeType="String"/>
+        <attribute name="streetNumber" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="timezoneDescription" optional="YES" attributeType="String"/>
+        <attribute name="timezoneOffset" optional="YES" attributeType="String"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
         <attribute name="username" optional="YES" attributeType="String"/>
-        <attribute name="website" optional="YES" attributeType="String"/>
+        <attribute name="uuid" optional="YES" attributeType="String"/>
     </entity>
 </model>

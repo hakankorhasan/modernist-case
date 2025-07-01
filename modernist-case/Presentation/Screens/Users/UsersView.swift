@@ -25,7 +25,7 @@ struct UsersView: View {
                     Text("⚠️ \(error)")
                         .foregroundStyle(.red)
                 } else {
-                    List(usersViewModel.filteredUsers) { user in
+                    List(usersViewModel.filteredUsers, id: \.login?.uuid) { user in
                         NavigationLink(destination: UserDetailsView(user: user)) {
                             UserCardView(user: user)
                         }

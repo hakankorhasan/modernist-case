@@ -6,7 +6,7 @@
 //
 
 protocol UserRepository {
-    func fetchUsers() async throws -> [User]
+    func fetchUsers() async throws -> [RandomUser]
 }
 
 final class UserRepositoryImpl: UserRepository {
@@ -19,7 +19,7 @@ final class UserRepositoryImpl: UserRepository {
         self.remote = remote
     }
     
-    func fetchUsers() async throws -> [User] {
+    func fetchUsers() async throws -> [RandomUser] {
         try await remote.fetchUsers()
     }
     
