@@ -8,16 +8,19 @@
 import SwiftUI
 
 struct MainTabView: View {
+    
+    @StateObject var userVM: UsersViewModel
+    
     var body: some View {
         TabView {
+            UsersView(usersViewModel: userVM)
+                .tabItem {
+                    Label("Users", systemImage: "person.fill")
+                }
+            
             FavoritesView()
                 .tabItem {
                     Label("My Favorites", systemImage: "star.fill")
-                }
-
-            UsersView()
-                .tabItem {
-                    Label("Users", systemImage: "person.fill")
                 }
         }
     }
@@ -25,5 +28,5 @@ struct MainTabView: View {
 
 
 #Preview {
-    MainTabView()
+    MainTabView(userVM: UsersViewModel())
 }

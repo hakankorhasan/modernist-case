@@ -8,6 +8,8 @@
 final class UserRemoteDataSource {
     private let apiClient: APIClient
 
+    static let shared = UserRemoteDataSource(apiClient: NetworkService.shared)
+
     init(apiClient: APIClient = NetworkService()) {
         self.apiClient = apiClient
     }

@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct UserCardView: View {
-    //let user: User
+    let user: User
 
     var body: some View {
         HStack {
@@ -19,12 +19,12 @@ struct UserCardView: View {
                 .clipped()
             
             VStack(alignment: .leading, spacing: 16) {
-                Text("Name")
+                Text(user.name)
                     .font(.system(size: 18, weight: .bold))
                     .foregroundColor(.black)
                 
-                Text("Email")
-                    .font(.system(size: 16, weight: .bold))
+                Text(user.email)
+                    .font(.system(size: 16, weight: .medium))
                     .foregroundColor(.black)
             }
             

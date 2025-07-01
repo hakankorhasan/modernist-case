@@ -10,6 +10,8 @@ protocol UserRepository {
 }
 
 final class UserRepositoryImpl: UserRepository {
+
+    static let shared = UserRepositoryImpl(remote: UserRemoteDataSource.shared)
     
     private let remote: UserRemoteDataSource
     

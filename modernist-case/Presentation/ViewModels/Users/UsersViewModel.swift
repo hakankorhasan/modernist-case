@@ -7,9 +7,30 @@
 
 import Foundation
 
-@Observable class UsersViewModel: ObservableObject {
+@MainActor
+class UsersViewModel: ObservableObject {
     
-    var user: [User] = []
-    
+    @Published var users: [User] = []
+    @Published var isLoading = false
+    @Published var errorMessage: String?
+
+    private var fetchUserUseCase = FetchUsersUseCaseImpl.shared
+     
+     init() {
+         Task {
+             await loadUsers()
+         }
+     }
+
+    func loadUsers() async {
+        isLoading = true
+        defer { isLoading = false }
+
+        do {
+            users = try await fetchUserUseCase.execute()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
 }
 

@@ -12,6 +12,11 @@ protocol APIClient {
 }
 
 final class NetworkService: APIClient {
+    
+    static let shared = NetworkService()
+
+    init() { }
+    
     func request<T: Decodable>(_ endpoint: UserAPI, responseType: T.Type) async throws -> T {
         let request = endpoint.urlRequest
         let (data, _) = try await URLSession.shared.data(for: request)
