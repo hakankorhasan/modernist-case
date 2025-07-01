@@ -5,7 +5,7 @@
 //  Created by Hakan on 2.07.2025.
 //
 
-struct Login: Codable {
+struct Login: Codable, Hashable {
     let uuid: String?
     let username: String?
     let password: String?

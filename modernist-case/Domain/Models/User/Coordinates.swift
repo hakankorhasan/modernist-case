@@ -5,7 +5,7 @@
 //  Created by Hakan on 2.07.2025.
 //
 
-struct Coordinates: Codable {
+struct Coordinates: Codable, Hashable {
     let latitude: String?
     let longitude: String?
 }

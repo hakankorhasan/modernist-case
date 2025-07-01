@@ -106,6 +106,19 @@ struct UserDetailsView: View {
         }
         .navigationTitle("User Detail")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    GlobalNavigationManager.shared.pop(from: \.fullCoverPath)
+                }) {
+                    HStack {
+                        Image(systemName: "chevron.left")
+                        Text("Back")
+                    }
+                }
+            }
+        }
     }
 }
 

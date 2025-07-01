@@ -5,7 +5,7 @@
 //  Created by Hakan on 2.07.2025.
 //
 
-struct ID: Codable {
+struct ID: Codable, Hashable {
     let name: String?
     let value: String?
 }

@@ -12,7 +12,7 @@ struct modernist_caseApp: App {
 
     var body: some Scene {
         WindowGroup {
-            MainTabView(userVM: UsersViewModel())
+            MainTabView()
         }
     }
 }

@@ -25,15 +25,17 @@ struct UsersView: View {
                         .foregroundStyle(.red)
                 } else {
                     List(usersViewModel.filteredUsers, id: \.login?.uuid) { user in
-                        NavigationLink(destination: UserDetailsView(user: user)) {
-                            UserCardView(
-                                user: user,
-                                isFavorite: usersViewModel.isFavorite(user),
-                            )
-                        }
-                        .listRowSeparator(.hidden)
-                        .buttonStyle(PlainButtonStyle())
-                        .listRowBackground(Color.clear)
+                        Button(action: {
+                             GlobalNavigationManager.shared.push(.userDetails(user: user), to: \.fullCoverPath)
+                         }) {
+                             UserCardView(
+                                 user: user,
+                                 isFavorite: usersViewModel.isFavorite(user)
+                             )
+                         }
+                         .buttonStyle(PlainButtonStyle())
+                         .listRowSeparator(.hidden)
+                         .listRowBackground(Color.clear)
                     }
                     .listStyle(.plain)
                     .onAppear {
