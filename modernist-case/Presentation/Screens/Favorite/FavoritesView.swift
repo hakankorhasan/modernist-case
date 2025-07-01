@@ -8,11 +8,23 @@
 import SwiftUI
 
 struct FavoritesView: View {
+    @StateObject var viewModel: FavoritesViewModel
+    
+    init(viewModel: FavoritesViewModel = FavoritesViewModel()) {
+          _viewModel = StateObject(wrappedValue: viewModel)
+      }
+    
     var body: some View {
-        Text("Favorites")
+        VStack {
+            Text("Favorites")
+        }
+        .onAppear {
+            viewModel.fetchFavorites()
+        }
+        
     }
 }
 
 #Preview {
-    FavoritesView()
+    FavoritesView(viewModel: FavoritesViewModel())
 }

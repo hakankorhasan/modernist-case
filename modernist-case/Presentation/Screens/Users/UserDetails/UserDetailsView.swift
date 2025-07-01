@@ -8,7 +8,13 @@ import SwiftUI
 
 struct UserDetailsView: View {
     let user: User
-    @State private var isFavorite: Bool = false
+    
+    @StateObject private var viewModel: UserDetailsViewModel
+    
+    init(user: User) {
+        self.user = user
+        _viewModel = StateObject(wrappedValue: UserDetailsViewModel(user: user))
+    }
     
     var body: some View {
         ScrollView {
@@ -58,13 +64,12 @@ struct UserDetailsView: View {
                 Divider()
                 
                 Button(action: {
-                    isFavorite.toggle()
-                    // TODO: Trigger ViewModel or persistence logic if needed
+                    viewModel.toggleFavorite()
                 }) {
                     HStack {
-                        Image(systemName: isFavorite ? "star.fill" : "star")
-                            .foregroundColor(isFavorite ? .yellow : .gray)
-                        Text(isFavorite ? "Remove From Favorites" : "Add To Favorites")
+                        Image(systemName: viewModel.isFavorite ? "star.fill" : "star")
+                            .foregroundColor(viewModel.isFavorite ? .yellow : .gray)
+                        Text(viewModel.isFavorite ? "Remove From Favorites" : "Add To Favorites")
                             .foregroundColor(.primary)
                             .fontWeight(.semibold)
                     }
