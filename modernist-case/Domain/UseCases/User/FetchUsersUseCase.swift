@@ -7,7 +7,7 @@
 import Foundation
 
 protocol FetchUsersUseCase {
-    func execute() async throws -> [RandomUser]
+    func execute() async throws -> [User]
 }
 
 final class FetchUsersUseCaseImpl: FetchUsersUseCase {
@@ -20,7 +20,7 @@ final class FetchUsersUseCaseImpl: FetchUsersUseCase {
         self.userRepository = userRepository
     }
     
-    func execute() async throws -> [RandomUser] {
+    func execute() async throws -> [User] {
         return try await userRepository.fetchUsers()
     }
 }

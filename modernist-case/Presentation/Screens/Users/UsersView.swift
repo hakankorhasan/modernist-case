@@ -14,7 +14,6 @@ struct UsersView: View {
     var body: some View {
         NavigationView {
             VStack {
-                
                 // SearchBar
                 SearchBarView(text: $usersViewModel.searchText)
                 
@@ -27,13 +26,19 @@ struct UsersView: View {
                 } else {
                     List(usersViewModel.filteredUsers, id: \.login?.uuid) { user in
                         NavigationLink(destination: UserDetailsView(user: user)) {
-                            UserCardView(user: user)
+                            UserCardView(
+                                user: user,
+                                isFavorite: usersViewModel.isFavorite(user),
+                            )
                         }
                         .listRowSeparator(.hidden)
                         .buttonStyle(PlainButtonStyle())
                         .listRowBackground(Color.clear)
                     }
                     .listStyle(.plain)
+                    .onAppear {
+                        usersViewModel.loadFavorites()
+                    }
                 }
             }
             .navigationTitle("Users")

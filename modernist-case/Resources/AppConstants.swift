@@ -28,6 +28,7 @@ enum AppConstants {
         static let medium: CGFloat = 8
         static let large: CGFloat = 12
         static let extraLarge: CGFloat = 20
+        static let huge: CGFloat = 32
     }
     
     enum Size {

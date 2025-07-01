@@ -7,11 +7,11 @@
 import SwiftUI
 
 struct UserDetailsView: View {
-    let user: RandomUser
+    let user: User
     
     @StateObject private var viewModel: UserDetailsViewModel
     
-    init(user: RandomUser) {
+    init(user: User) {
         self.user = user
         _viewModel = StateObject(wrappedValue: UserDetailsViewModel(user: user))
     }
@@ -20,8 +20,29 @@ struct UserDetailsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 // Name
-                Text("\(user.name?.title ?? "") \(user.name?.first ?? "") \(user.name?.last ?? "")")
-                    .font(.largeTitle.bold())
+                HStack {
+                    Spacer()
+                    if let urlString = user.picture?.large, let url = URL(string: urlString) {
+                        AsyncImage(url: url)
+                            .scaledToFit()
+                            .cornerRadius(AppConstants.CornerRadius.medium)
+                    } else {
+                        Image(systemName: "person.fill") // fallback image
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: AppConstants.Size.buttonHeight64)
+                            .cornerRadius(AppConstants.CornerRadius.medium)
+                            .clipped()
+                    }
+                    Spacer()
+                }
+                
+                HStack {
+                    Spacer()
+                    Text("\(user.name?.title ?? "") \(user.name?.first ?? "") \(user.name?.last ?? "")")
+                        .font(.largeTitle.bold())
+                    Spacer()
+                }
 
                 // Username
                 HStack {
@@ -89,7 +110,7 @@ struct UserDetailsView: View {
 }
 
 #Preview {
-    UserDetailsView(user: RandomUser(
+    UserDetailsView(user: User(
         gender: "male",
         name: Name(title: "Mr", first: "Hakan", last: "Körhasan"),
         location: Location(

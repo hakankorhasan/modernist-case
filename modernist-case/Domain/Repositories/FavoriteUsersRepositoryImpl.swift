@@ -6,10 +6,10 @@
 //
 
 protocol FavoriteUsersRepository {
-    func add(user: RandomUser)
+    func add(user: User)
     func remove(userId: String)
     func isFavorite(userId: String) -> Bool
-    func getAllFavorites() -> [RandomUser]
+    func getAllFavorites() -> [User]
 }
 
 final class FavoriteUsersRepositoryImpl: FavoriteUsersRepository {
@@ -22,7 +22,7 @@ final class FavoriteUsersRepositoryImpl: FavoriteUsersRepository {
         self.localDataSource = localDataSource
     }
 
-    func add(user: RandomUser) {
+    func add(user: User) {
         localDataSource.add(user: user)
     }
 
@@ -34,11 +34,11 @@ final class FavoriteUsersRepositoryImpl: FavoriteUsersRepository {
         localDataSource.isFavorite(userIdValue: userId)
     }
 
-    func getAllFavorites() -> [RandomUser] {
+    func getAllFavorites() -> [User] {
         let entities = localDataSource.getAllFavorites()
         
         return entities.map { entity in
-            RandomUser(
+            User(
                 gender: entity.gender ?? "",
                 name: Name(
                     title: entity.name?.title ?? "",
@@ -96,6 +96,4 @@ final class FavoriteUsersRepositoryImpl: FavoriteUsersRepository {
             )
         }
     }
-
-
 }

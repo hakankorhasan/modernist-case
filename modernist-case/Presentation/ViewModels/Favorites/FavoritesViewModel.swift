@@ -10,7 +10,7 @@ import Combine
 final class FavoritesViewModel: ObservableObject {
     
     @Published var isFavorite: Bool = false
-    @Published var favoriteUsers: [RandomUser] = []
+    @Published var favoriteUsers: [User] = []
 
     private var addFavoriteUseCase = AddFavoriteUserUseCase.shared
     private let removeFavoriteUseCase =  RemoveFavoriteUserUseCase.shared
@@ -30,6 +30,16 @@ final class FavoritesViewModel: ObservableObject {
             print(favoriteUsers)
         } catch {
             print("error")
+        }
+    }
+    
+    func removeFromFavorites(user: User) {
+        
+        do {
+            removeFavoriteUseCase.execute(userId: user.id?.value ?? "")
+            fetchFavorites()
+        } catch {
+            print("Remove failed")
         }
     }
 }

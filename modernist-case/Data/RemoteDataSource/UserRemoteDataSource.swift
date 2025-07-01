@@ -14,10 +14,10 @@ final class UserRemoteDataSource {
         self.apiClient = apiClient
     }
 
-    func fetchUsers() async throws -> [RandomUser] {
+    func fetchUsers() async throws -> [User] {
         let response = try await apiClient.request(
             .getUsers(page: 3, results: 10, seed: "abc"),
-            responseType: RandomUserResponse.self
+            responseType: UserResponse.self
         )
         return response.results ?? []
     }

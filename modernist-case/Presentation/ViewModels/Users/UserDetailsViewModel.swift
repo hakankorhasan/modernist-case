@@ -11,7 +11,7 @@ import Combine
 final class UserDetailsViewModel: ObservableObject {
     
     @Published var isFavorite: Bool = false
-    @Published var favoriteUsers: [RandomUser] = []
+    @Published var favoriteUsers: [User] = []
 
     private var addFavoriteUseCase = AddFavoriteUserUseCase.shared
     private let removeFavoriteUseCase =  RemoveFavoriteUserUseCase.shared
@@ -19,9 +19,9 @@ final class UserDetailsViewModel: ObservableObject {
 
     
     private var cancellables = Set<AnyCancellable>()
-    private let user: RandomUser
+    private let user: User
     
-    init(user: RandomUser) {
+    init(user: User) {
         self.user = user
         self.checkIfFavorite()
     }

@@ -18,7 +18,7 @@ final class FavoriteUserLocalDataSource {
     }
 
     @discardableResult
-    func add(user: RandomUser) -> Bool {
+    func add(user: User) -> Bool {
         let entity = FavoriteUserEntity(context: context)
         entity.username = user.login?.username
         entity.email = user.email
@@ -105,7 +105,7 @@ final class FavoriteUserLocalDataSource {
         }
     }
 
-    func getAllFavorites() -> [RandomUser] {
+    func getAllFavorites() -> [User] {
         let fetchRequest: NSFetchRequest<FavoriteUserEntity> = FavoriteUserEntity.fetchRequest()
 
         do {
@@ -165,7 +165,7 @@ final class FavoriteUserLocalDataSource {
                     thumbnail: entity.pictureThumbnail
                 )
 
-                return RandomUser(
+                return User(
                     gender: entity.gender ?? "",
                     name: name,
                     location: location,

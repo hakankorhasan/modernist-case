@@ -24,7 +24,10 @@ struct FavoritesView: View {
                 } else {
                     List(viewModel.favoriteUsers, id: \.login?.uuid) { user in
                         NavigationLink(destination: UserDetailsView(user: user)) {
-                            UserCardView(user: user)
+                            UserCardView(
+                                user: user,
+                                isFavorite: true,
+                            )
                         }
                         .listRowSeparator(.hidden)
                         .buttonStyle(PlainButtonStyle())
