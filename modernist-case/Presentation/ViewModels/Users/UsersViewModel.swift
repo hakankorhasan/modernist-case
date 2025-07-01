@@ -11,8 +11,14 @@ import Foundation
 class UsersViewModel: ObservableObject {
     
     @Published var users: [User] = []
+    @Published var filteredUsers: [User] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
+    @Published var searchText: String = "" {
+        didSet {
+            filterUsers()
+        }
+    }
 
     private var fetchUserUseCase = FetchUsersUseCaseImpl.shared
      
@@ -28,8 +34,19 @@ class UsersViewModel: ObservableObject {
 
         do {
             users = try await fetchUserUseCase.execute()
+            filterUsers()
         } catch {
             errorMessage = error.localizedDescription
+        }
+    }
+    
+    private func filterUsers() {
+        if searchText.isEmpty {
+            filteredUsers = users
+        } else {
+            filteredUsers = users.filter { user in
+                user.name.lowercased().contains(searchText.lowercased())
+            }
         }
     }
 }

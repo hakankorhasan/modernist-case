@@ -14,6 +14,10 @@ struct UsersView: View {
     var body: some View {
         NavigationView {
             VStack {
+                
+                // SearchBar
+                SearchBarView(text: $usersViewModel.searchText)
+                
                 if usersViewModel.isLoading {
                     ProgressView("Loading users...")
                         .progressViewStyle(CircularProgressViewStyle())
@@ -21,13 +25,13 @@ struct UsersView: View {
                     Text("⚠️ \(error)")
                         .foregroundStyle(.red)
                 } else {
-                    List(usersViewModel.users) { user in
+                    List(usersViewModel.filteredUsers) { user in
                         NavigationLink(destination: UserDetailsView(user: user)) {
                             UserCardView(user: user)
                         }
                         .listRowSeparator(.hidden)
                         .buttonStyle(PlainButtonStyle())
-                        .listRowBackground(Color.clear) 
+                        .listRowBackground(Color.clear)
                     }
                     .listStyle(.plain)
                 }
