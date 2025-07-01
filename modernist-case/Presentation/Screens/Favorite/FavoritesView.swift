@@ -9,19 +9,35 @@ import SwiftUI
 
 struct FavoritesView: View {
     @StateObject var viewModel: FavoritesViewModel
-    
+
     init(viewModel: FavoritesViewModel = FavoritesViewModel()) {
-          _viewModel = StateObject(wrappedValue: viewModel)
-      }
-    
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
+
     var body: some View {
-        VStack {
-            Text("Favorites")
+        NavigationView {
+            VStack {
+                if viewModel.favoriteUsers.isEmpty {
+                    Text("No favorite users yet.")
+                        .foregroundStyle(.gray)
+                        .padding(.top, 100)
+                } else {
+                    List(viewModel.favoriteUsers) { user in
+                        NavigationLink(destination: UserDetailsView(user: user)) {
+                            UserCardView(user: user)
+                        }
+                        .listRowSeparator(.hidden)
+                        .buttonStyle(PlainButtonStyle())
+                        .listRowBackground(Color.clear)
+                    }
+                    .listStyle(.plain)
+                }
+            }
+            .navigationTitle("My Favorites")
+            .onAppear {
+                viewModel.fetchFavorites()
+            }
         }
-        .onAppear {
-            viewModel.fetchFavorites()
-        }
-        
     }
 }
 
