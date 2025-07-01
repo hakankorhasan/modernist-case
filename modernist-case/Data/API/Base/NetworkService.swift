@@ -7,10 +7,6 @@
 
 import Foundation
 
-protocol APIClient {
-    func request<T: Decodable>(_ endpoint: UserAPI, responseType: T.Type) async throws -> T
-}
-
 final class NetworkService: APIClient {
     
     static let shared = NetworkService()

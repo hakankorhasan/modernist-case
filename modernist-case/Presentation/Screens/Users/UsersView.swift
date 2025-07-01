@@ -22,8 +22,12 @@ struct UsersView: View {
                         .foregroundStyle(.red)
                 } else {
                     List(usersViewModel.users) { user in
-                        UserCardView(user: user)
-                            .listRowSeparator(.hidden)
+                        NavigationLink(destination: UserDetailsView(user: user)) {
+                            UserCardView(user: user)
+                        }
+                        .listRowSeparator(.hidden)
+                        .buttonStyle(PlainButtonStyle())
+                        .listRowBackground(Color.clear) 
                     }
                     .listStyle(.plain)
                 }
