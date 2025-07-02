@@ -12,10 +12,10 @@ final class FavoritesViewModel: ObservableObject {
     @Published var isFavorite: Bool = false
     @Published var favoriteUsers: [User] = []
 
-    private var addFavoriteUseCase = AddFavoriteUserUseCase.shared
-    private let removeFavoriteUseCase =  RemoveFavoriteUserUseCase.shared
-    private let isFavoriteFavoriteUseCase = IsFavoriteUserUseCase.shared
-    private let getAllFavoritesUseCase = GetAllFavoriteUsersUseCase.shared
+    private var addFavoriteUseCase = AddFavoriteUserUseCaseImpl.shared
+    private let removeFavoriteUseCase =  RemoveFavoriteUserUseCaseImpl.shared
+    private let isFavoriteFavoriteUseCase = IsFavoriteUserUseCaseImpl.shared
+    private let getAllFavoritesUseCase = GetAllFavoriteUsersUseCaseImpl.shared
 
     
     private var cancellables = Set<AnyCancellable>()
@@ -25,21 +25,17 @@ final class FavoritesViewModel: ObservableObject {
     }
     
     func fetchFavorites() {
-        do {
-            favoriteUsers = getAllFavoritesUseCase.execute()
-            print(favoriteUsers)
-        } catch {
-            print("error")
-        }
+        getAllFavoritesUseCase.execute()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] users in
+                self?.favoriteUsers = users
+                print(users)
+            }
+            .store(in: &cancellables)
     }
     
     func removeFromFavorites(user: User) {
-        
-        do {
-            removeFavoriteUseCase.execute(userId: user.id?.value ?? "")
-            fetchFavorites()
-        } catch {
-            print("Remove failed")
-        }
+        removeFavoriteUseCase.execute(userId: user.id?.value ?? "")
+        fetchFavorites()
     }
 }

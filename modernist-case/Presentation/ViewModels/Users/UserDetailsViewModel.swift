@@ -11,32 +11,41 @@ import Combine
 final class UserDetailsViewModel: ObservableObject {
     
     @Published var isFavorite: Bool = false
-    @Published var favoriteUsers: [User] = []
 
-    private var addFavoriteUseCase = AddFavoriteUserUseCase.shared
-    private let removeFavoriteUseCase =  RemoveFavoriteUserUseCase.shared
-    private let isFavoriteFavoriteUseCase = IsFavoriteUserUseCase.shared
+    private var addFavoriteUseCase = AddFavoriteUserUseCaseImpl.shared
+    private let removeFavoriteUseCase = RemoveFavoriteUserUseCaseImpl.shared
+    private let isFavoriteUseCase = IsFavoriteUserUseCaseImpl.shared
 
-    
     private var cancellables = Set<AnyCancellable>()
     private let user: User
     
     init(user: User) {
         self.user = user
-        self.checkIfFavorite()
+        checkIfFavorite()
     }
     
     func toggleFavorite() {
         if isFavorite {
             removeFavoriteUseCase.execute(userId: user.id?.value ?? "")
-            isFavorite = false
+                .sink { [weak self] in
+                    self?.isFavorite = false
+                }
+                .store(in: &cancellables)
         } else {
             addFavoriteUseCase.execute(user: user)
-            isFavorite = true
+                .sink { [weak self] in
+                    self?.isFavorite = true
+                }
+                .store(in: &cancellables)
         }
     }
     
     private func checkIfFavorite() {
-        isFavorite = isFavoriteFavoriteUseCase.execute(userId: user.id?.value ?? "")
+        isFavoriteUseCase.execute(userId: user.id?.value ?? "")
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isFav in
+                self?.isFavorite = isFav
+            }
+            .store(in: &cancellables)
     }
 }

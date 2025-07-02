@@ -5,6 +5,10 @@
 //  Created by Hakan on 1.07.2025.
 //
 
+import Combine
+import Foundation
+
+import Combine
 import Foundation
 
 @MainActor
@@ -22,72 +26,77 @@ class UsersViewModel: ObservableObject {
     
     @Published var favorites: Set<String> = []
 
-    private var fetchUserUseCase = FetchUsersUseCaseImpl.shared
-    private let getAllFavoritesUseCase = GetAllFavoriteUsersUseCase.shared
-    private let addFavoriteUseCase = AddFavoriteUserUseCase.shared
-    private let removeFavoriteUseCase = RemoveFavoriteUserUseCase.shared
-     
-     init() {
-         loadFavorites()
-         Task {
-             await loadUsers()
-         }
-     }
+    private let fetchUserUseCase: FetchUsersUseCase = FetchUsersUseCaseImpl.shared
+    private let getAllFavoritesUseCase = GetAllFavoriteUsersUseCaseImpl.shared
+    private let addFavoriteUseCase = AddFavoriteUserUseCaseImpl.shared
+    private let removeFavoriteUseCase = RemoveFavoriteUserUseCaseImpl.shared
 
-    func loadUsers() async {
+    private var cancellables = Set<AnyCancellable>()
+
+    init() {
+        loadFavorites()
+        loadUsers()
+    }
+
+    func loadUsers() {
         isLoading = true
-        defer { isLoading = false }
+        errorMessage = nil
 
-        do {
-            users = try await fetchUserUseCase.execute()
-            filterUsers()
-        } catch {
-            errorMessage = error.localizedDescription
-        }
+        fetchUserUseCase.execute()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                self?.isLoading = false
+                if case let .failure(error) = completion {
+                    self?.errorMessage = error.localizedDescription
+                }
+            } receiveValue: { [weak self] users in
+                self?.users = users
+                self?.filterUsers()
+            }
+            .store(in: &cancellables)
     }
-    
+
     func loadFavorites() {
-        do {
-            let favoriteUsers = getAllFavoritesUseCase.execute()
-            favorites = Set(favoriteUsers.compactMap { $0.login?.uuid })
-        } catch {
-            print("Failed to load favorites")
-        }
+        getAllFavoritesUseCase.execute()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] favoriteUsers in
+                self?.favorites = Set(favoriteUsers.compactMap { $0.login?.uuid })
+            }
+            .store(in: &cancellables)
     }
-    
+
     func isFavorite(_ user: User) -> Bool {
         guard let id = user.login?.uuid else { return false }
         return favorites.contains(id)
     }
-    
+
     func toggleFavorite(for user: User) {
         guard let id = user.id?.value else { return }
 
         if favorites.contains(id) {
-            do {
-                removeFavoriteUseCase.execute(userId: user.id?.value ?? "")
-                favorites.remove(id)
-            } catch {
-                print("Failed to remove favorite")
-            }
+            removeFavoriteUseCase.execute(userId: id)
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    self?.favorites.remove(id)
+                }
+                .store(in: &cancellables)
         } else {
-            do {
-                addFavoriteUseCase.execute(user: user)
-                favorites.insert(id)
-            } catch {
-                print("Failed to add favorite")
-            }
+            addFavoriteUseCase.execute(user: user)
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    self?.favorites.insert(id)
+                }
+                .store(in: &cancellables)
         }
     }
-    
+
     private func filterUsers() {
         if searchText.isEmpty {
             filteredUsers = users
         } else {
-            filteredUsers = users.filter { user in
-                user.id?.name?.lowercased().contains(searchText.lowercased()) ?? false
+            filteredUsers = users.filter {
+                $0.id?.name?.lowercased().contains(searchText.lowercased()) ?? false
             }
         }
     }
 }
-

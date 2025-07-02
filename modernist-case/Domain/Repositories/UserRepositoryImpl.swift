@@ -5,12 +5,14 @@
 //  Created by Hakan on 30.06.2025.
 //
 
+import Combine
+
 protocol UserRepository {
-    func fetchUsers() async throws -> [User]
+    func fetchUsers() -> AnyPublisher<[User], NetworkError>
 }
 
 final class UserRepositoryImpl: UserRepository {
-
+    
     static let shared = UserRepositoryImpl(remote: UserRemoteDataSource.shared)
     
     private let remote: UserRemoteDataSource
@@ -19,8 +21,7 @@ final class UserRepositoryImpl: UserRepository {
         self.remote = remote
     }
     
-    func fetchUsers() async throws -> [User] {
-        try await remote.fetchUsers()
+    func fetchUsers() -> AnyPublisher<[User], NetworkError> {
+        return remote.fetchUsers()
     }
-    
 }
