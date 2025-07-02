@@ -111,7 +111,6 @@ final class FavoriteUserLocalDataSource {
         do {
             let entities = try context.fetch(fetchRequest)
             return entities.map { entity in
-                // Önce alt objeleri oluştur
                 let name = Name(
                     title: entity.title,
                     first: entity.firstName,
