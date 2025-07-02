@@ -26,7 +26,6 @@ final class FavoritesViewModel: ObservableObject {
     
     func fetchFavorites() {
         getAllFavoritesUseCase.execute()
-            .receive(on: DispatchQueue.main)
             .sink { [weak self] users in
                 self?.favoriteUsers = users
                 print(users)

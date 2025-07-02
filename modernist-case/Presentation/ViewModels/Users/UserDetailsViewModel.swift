@@ -42,7 +42,6 @@ final class UserDetailsViewModel: ObservableObject {
     
     private func checkIfFavorite() {
         isFavoriteUseCase.execute(userId: user.id?.value ?? "")
-            .receive(on: DispatchQueue.main)
             .sink { [weak self] isFav in
                 self?.isFavorite = isFav
             }

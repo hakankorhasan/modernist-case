@@ -43,7 +43,6 @@ class UsersViewModel: ObservableObject {
         errorMessage = nil
 
         fetchUserUseCase.execute()
-            .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 self?.isLoading = false
                 if case let .failure(error) = completion {
@@ -58,7 +57,6 @@ class UsersViewModel: ObservableObject {
 
     func loadFavorites() {
         getAllFavoritesUseCase.execute()
-            .receive(on: DispatchQueue.main)
             .sink { [weak self] favoriteUsers in
                 self?.favorites = Set(favoriteUsers.compactMap { $0.login?.uuid })
             }
@@ -75,14 +73,12 @@ class UsersViewModel: ObservableObject {
 
         if favorites.contains(id) {
             removeFavoriteUseCase.execute(userId: id)
-                .receive(on: DispatchQueue.main)
                 .sink { [weak self] in
                     self?.favorites.remove(id)
                 }
                 .store(in: &cancellables)
         } else {
             addFavoriteUseCase.execute(user: user)
-                .receive(on: DispatchQueue.main)
                 .sink { [weak self] in
                     self?.favorites.insert(id)
                 }
