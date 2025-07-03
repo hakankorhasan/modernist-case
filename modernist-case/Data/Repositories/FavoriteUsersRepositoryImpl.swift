@@ -8,13 +8,6 @@
 import Combine
 import Foundation
 
-protocol FavoriteUsersRepository {
-    func add(user: User) -> AnyPublisher<Void, Never>
-    func remove(userId: String)
-    func isFavorite(userId: String) -> Bool
-    func getAllFavorites() -> [User]
-}
-
 final class FavoriteUsersRepositoryImpl: FavoriteUsersRepository {
     
     private let localDataSource: FavoriteUserLocalDataSource

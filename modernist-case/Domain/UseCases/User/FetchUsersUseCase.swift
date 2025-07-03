@@ -17,7 +17,7 @@ final class FetchUsersUseCaseImpl: FetchUsersUseCase {
     
     private let userRepository: UserRepository
     
-    private init(userRepository: UserRepository) {
+    init(userRepository: UserRepository) {
         self.userRepository = userRepository
     }
     

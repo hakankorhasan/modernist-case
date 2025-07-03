@@ -56,5 +56,10 @@ struct UsersView: View {
 }
 
 #Preview {
-    UsersView(usersViewModel: UsersViewModel())
+    UsersView(usersViewModel: UsersViewModel(
+            fetchUserUseCase: AppDIContainer.shared.fetchUsersUseCase,
+            addFavoriteUseCase: AppDIContainer.shared.addFavoriteUserUseCase,
+            removeFavoriteUseCase: AppDIContainer.shared.removeFavoriteUserUseCase,
+            getAllFavoritesUseCase: AppDIContainer.shared.getAllFavoriteUsersUseCase
+        ))
 }

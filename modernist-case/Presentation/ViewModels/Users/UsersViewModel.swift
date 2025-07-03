@@ -12,6 +12,11 @@ import Foundation
 @MainActor
 class UsersViewModel: ObservableObject {
     
+    private let fetchUserUseCase: FetchUsersUseCase
+    private let addFavoriteUseCase: AddFavoriteUserUseCase
+    private let removeFavoriteUseCase: RemoveFavoriteUserUseCase
+    private let getAllFavoritesUseCase: GetAllFavoriteUsersUseCase
+
     @Published var users: [User] = []
     @Published var filteredUsers: [User] = []
     @Published var isLoading = false
@@ -21,20 +26,25 @@ class UsersViewModel: ObservableObject {
             filterUsers()
         }
     }
-    
     @Published var favorites: Set<String> = []
-
-    private let fetchUserUseCase: FetchUsersUseCase = FetchUsersUseCaseImpl.shared
-    private let getAllFavoritesUseCase = GetAllFavoriteUsersUseCaseImpl.shared
-    private let addFavoriteUseCase = AddFavoriteUserUseCaseImpl.shared
-    private let removeFavoriteUseCase = RemoveFavoriteUserUseCaseImpl.shared
 
     private var cancellables = Set<AnyCancellable>()
 
-    init() {
+    init(
+        fetchUserUseCase: FetchUsersUseCase,
+        addFavoriteUseCase: AddFavoriteUserUseCase,
+        removeFavoriteUseCase: RemoveFavoriteUserUseCase,
+        getAllFavoritesUseCase: GetAllFavoriteUsersUseCase
+    ) {
+        self.fetchUserUseCase = fetchUserUseCase
+        self.addFavoriteUseCase = addFavoriteUseCase
+        self.removeFavoriteUseCase = removeFavoriteUseCase
+        self.getAllFavoritesUseCase = getAllFavoritesUseCase
+        
         loadFavorites()
         loadUsers()
     }
+    
 
     func loadUsers() {
         isLoading = true
@@ -67,7 +77,7 @@ class UsersViewModel: ObservableObject {
     }
 
     func toggleFavorite(for user: User) {
-        guard let id = user.id?.value else { return }
+        guard let id = user.login?.uuid else { return }
 
         if favorites.contains(id) {
             removeFavoriteUseCase.execute(userId: id)

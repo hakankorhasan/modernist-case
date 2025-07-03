@@ -7,10 +7,6 @@
 
 import Combine
 
-protocol UserRepository {
-    func fetchUsers() -> AnyPublisher<[User], NetworkError>
-}
-
 final class UserRepositoryImpl: UserRepository {
     
     static let shared = UserRepositoryImpl(remote: UserRemoteDataSource.shared)
