@@ -22,18 +22,63 @@ struct UserDetailsView: View {
                 // Name
                 HStack {
                     Spacer()
-                    if let urlString = user.picture?.large, let url = URL(string: urlString) {
-                        AsyncImage(url: url)
-                            .scaledToFit()
-                            .cornerRadius(AppConstants.CornerRadius.medium)
+                    
+                    if let thumbnail = user.picture?.thumbnail {
+                        if thumbnail.starts(with: "/") {
+                            
+                            let localURL = URL(fileURLWithPath: thumbnail)
+                            if let imageData = try? Data(contentsOf: localURL),
+                               let uiImage = UIImage(data: imageData) {
+                                Image(uiImage: uiImage)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: AppConstants.Size.buttonHeight64)
+                                    .cornerRadius(AppConstants.CornerRadius.medium)
+                                    .clipped()
+                            } else {
+                                placeholderImage
+                            }
+                        } else if thumbnail.starts(with: "file://") {
+                            
+                            if let localURL = URL(string: thumbnail),
+                               let imageData = try? Data(contentsOf: localURL),
+                               let uiImage = UIImage(data: imageData) {
+                                Image(uiImage: uiImage)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: AppConstants.Size.buttonHeight64)
+                                    .cornerRadius(AppConstants.CornerRadius.medium)
+                                    .clipped()
+                            } else {
+                                placeholderImage
+                            }
+                        } else if let url = URL(string: thumbnail) {
+                            AsyncImage(url: url) { phase in
+                                switch phase {
+                                case .empty:
+                                    ProgressView()
+                                        .frame(height: AppConstants.Size.buttonHeight64)
+                                case .success(let image):
+                                    image
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: AppConstants.Size.buttonHeight64)
+                                        .cornerRadius(AppConstants.CornerRadius.medium)
+                                        .clipped()
+                                case .failure:
+                                    placeholderImage
+                                @unknown default:
+                                    placeholderImage
+                                }
+                            }
+                        } else {
+                            placeholderImage
+                        }
                     } else {
-                        Image(systemName: "person.fill") // fallback image
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: AppConstants.Size.buttonHeight64)
-                            .cornerRadius(AppConstants.CornerRadius.medium)
-                            .clipped()
+                        placeholderImage
                     }
+
+                    
                     Spacer()
                 }
                 
@@ -120,7 +165,17 @@ struct UserDetailsView: View {
             }
         }
     }
+    
+    private var placeholderImage: some View {
+        Image(systemName: "person.fill")
+            .resizable()
+            .scaledToFit()
+            .frame(height: 200)
+            .cornerRadius(AppConstants.CornerRadius.medium)
+            .clipped()
+    }
 }
+
 
 #Preview {
     UserDetailsView(user: User(

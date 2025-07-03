@@ -21,9 +21,8 @@ final class AddFavoriteUserUseCaseImpl: AddFavoriteUserUseCase {
 
     func execute(user: User) -> AnyPublisher<Void, Never> {
         repository.add(user: user)
-        return Just(())
-            .eraseToAnyPublisher()
     }
+
 }
 
 

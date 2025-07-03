@@ -13,31 +13,21 @@ struct UserCardView: View {
     var body: some View {
         ZStack(alignment: .topTrailing) {
             HStack {
-                if let urlString = user.picture?.thumbnail, let url = URL(string: urlString) {
-                    AsyncImage(url: url)
-                        .scaledToFit()
-                        .frame(height: AppConstants.Size.buttonHeight64)
-                        .cornerRadius(AppConstants.CornerRadius.medium)
-                        .clipped()
-                } else {
-                    Image(systemName: "person.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: AppConstants.Size.buttonHeight64)
-                        .cornerRadius(AppConstants.CornerRadius.medium)
-                        .clipped()
-                }
                 
+                UserImageView(imagePathOrURL: user.picture?.thumbnail,
+                              height: AppConstants.Size.buttonHeight64,
+                              cornerRadius: AppConstants.CornerRadius.medium)
+
                 VStack(alignment: .leading, spacing: AppConstants.Padding.medium) {
                     Text("\(user.name?.title ?? "") \(user.name?.first ?? "") \(user.name?.last ?? "")")
                         .font(.system(size: AppConstants.Font.body, weight: .bold))
-                        .foregroundColor(.black)
-                    
+                        .foregroundColor(.primary)
+
                     Text(user.email ?? "")
                         .font(.system(size: AppConstants.Font.body, weight: .medium))
-                        .foregroundColor(.black)
+                        .foregroundColor(.secondary)
                 }
-                
+
                 Spacer()
             }
             .padding(.vertical, AppConstants.Padding.large)
@@ -49,7 +39,15 @@ struct UserCardView: View {
             Image(systemName: isFavorite ? "star.fill" : "star")
                 .foregroundColor(.yellow)
                 .padding(12)
-            
         }
+    }
+
+    private var placeholderImage: some View {
+        Image(systemName: "person.fill")
+            .resizable()
+            .scaledToFit()
+            .frame(height: AppConstants.Size.buttonHeight64)
+            .cornerRadius(AppConstants.CornerRadius.medium)
+            .clipped()
     }
 }

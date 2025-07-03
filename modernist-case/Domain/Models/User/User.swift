@@ -17,7 +17,7 @@ struct User: Codable, Hashable {
     let phone: String?
     let cell: String?
     let id: ID?
-    let picture: Picture?
+    var picture: Picture?
     let nat: String?
 }
 
