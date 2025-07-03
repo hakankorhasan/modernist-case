@@ -23,60 +23,11 @@ struct UserDetailsView: View {
                 HStack {
                     Spacer()
                     
-                    if let thumbnail = user.picture?.thumbnail {
-                        if thumbnail.starts(with: "/") {
-                            
-                            let localURL = URL(fileURLWithPath: thumbnail)
-                            if let imageData = try? Data(contentsOf: localURL),
-                               let uiImage = UIImage(data: imageData) {
-                                Image(uiImage: uiImage)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(height: AppConstants.Size.buttonHeight64)
-                                    .cornerRadius(AppConstants.CornerRadius.medium)
-                                    .clipped()
-                            } else {
-                                placeholderImage
-                            }
-                        } else if thumbnail.starts(with: "file://") {
-                            
-                            if let localURL = URL(string: thumbnail),
-                               let imageData = try? Data(contentsOf: localURL),
-                               let uiImage = UIImage(data: imageData) {
-                                Image(uiImage: uiImage)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(height: AppConstants.Size.buttonHeight64)
-                                    .cornerRadius(AppConstants.CornerRadius.medium)
-                                    .clipped()
-                            } else {
-                                placeholderImage
-                            }
-                        } else if let url = URL(string: thumbnail) {
-                            AsyncImage(url: url) { phase in
-                                switch phase {
-                                case .empty:
-                                    ProgressView()
-                                        .frame(height: AppConstants.Size.buttonHeight64)
-                                case .success(let image):
-                                    image
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(height: AppConstants.Size.buttonHeight64)
-                                        .cornerRadius(AppConstants.CornerRadius.medium)
-                                        .clipped()
-                                case .failure:
-                                    placeholderImage
-                                @unknown default:
-                                    placeholderImage
-                                }
-                            }
-                        } else {
-                            placeholderImage
-                        }
-                    } else {
-                        placeholderImage
-                    }
+                    UserImageView(
+                        imagePathOrURL: user.picture?.thumbnail,
+                        height: AppConstants.Size.buttonHeight64,
+                        cornerRadius: AppConstants.CornerRadius.medium
+                    )
 
                     
                     Spacer()

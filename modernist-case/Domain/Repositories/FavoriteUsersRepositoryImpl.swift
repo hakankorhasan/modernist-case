@@ -28,18 +28,18 @@ final class FavoriteUsersRepositoryImpl: FavoriteUsersRepository {
     func add(user: User) -> AnyPublisher<Void, Never> {
         guard let thumbnailURLString = user.picture?.thumbnail,
               let url = URL(string: thumbnailURLString) else {
-
             localDataSource.add(user: user)
             return Just(()).eraseToAnyPublisher()
         }
-        
+
         return URLSession.shared.dataTaskPublisher(for: url)
             .map(\.data)
             .handleEvents(receiveOutput: { [weak self] data in
                 guard let self = self else { return }
-                if let localURL = ImageCacheManager.shared.saveImageToDisk(imageData: data, fileName: "\(user.login?.uuid ?? UUID().uuidString).jpg") {
+                let fileName = "\(user.login?.uuid ?? UUID().uuidString).jpg"
+                if ImageCacheManager.shared.saveImageToDisk(imageData: data, fileName: fileName) != nil {
                     var userWithLocalPath = user
-                    userWithLocalPath.picture?.thumbnail = localURL.path
+                    userWithLocalPath.picture?.thumbnail = fileName
                     _ = self.localDataSource.add(user: userWithLocalPath)
                 } else {
                     _ = self.localDataSource.add(user: user)
@@ -49,6 +49,7 @@ final class FavoriteUsersRepositoryImpl: FavoriteUsersRepository {
             .replaceError(with: ())
             .eraseToAnyPublisher()
     }
+
     
     
     func remove(userId: String) {

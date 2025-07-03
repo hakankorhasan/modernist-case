@@ -13,10 +13,10 @@ final class ImageCacheManager {
     
     func saveImageToDisk(imageData: Data, fileName: String) -> URL? {
         let fileManager = FileManager.default
-        guard let docs = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first else {
+        guard let cacheDir = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first else {
             return nil
         }
-        let fileURL = docs.appendingPathComponent(fileName)
+        let fileURL = cacheDir.appendingPathComponent(fileName)
         do {
             try imageData.write(to: fileURL)
             return fileURL
@@ -25,4 +25,5 @@ final class ImageCacheManager {
             return nil
         }
     }
+
 }

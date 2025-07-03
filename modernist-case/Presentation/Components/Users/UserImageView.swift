@@ -4,7 +4,7 @@
 //
 //  Created by Hakan on 2.07.2025.
 //
-0
+
 import SwiftUI
 
 struct UserImageView: View {
@@ -14,51 +14,77 @@ struct UserImageView: View {
 
     var body: some View {
         Group {
-            if let path = imagePathOrURL {
-                if path.starts(with: "/") {
-                    
-                    let localURL = URL(fileURLWithPath: path)
-                    if let data = try? Data(contentsOf: localURL),
-                       let uiImage = UIImage(data: data) {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .scaledToFit()
-                    } else {
+            if let path = imagePathOrURL, let url = URL(string: path), path.starts(with: "http") {
+                // 🌐 Önce AsyncImage ile internetten dene
+                AsyncImage(url: url) { phase in
+                    switch phase {
+                    case .empty:
+                        ProgressView()
+                            .frame(height: height)
+                    case .success(let image):
+                        imageView(image: image)
+                    case .failure:
+                        localImageFallback(for: path)
+                    @unknown default:
                         placeholderImage
                     }
-                } else if path.starts(with: "file://") {
-                    if let localURL = URL(string: path),
-                       let data = try? Data(contentsOf: localURL),
-                       let uiImage = UIImage(data: data) {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .scaledToFit()
-                    } else {
-                        placeholderImage
-                    }
-                } else if let url = URL(string: path) {
-                    AsyncImage(url: url) { phase in
-                        switch phase {
-                        case .empty:
-                            ProgressView()
-                        case .success(let image):
-                            image.resizable().scaledToFit()
-                        case .failure:
-                            placeholderImage
-                        @unknown default:
-                            placeholderImage
-                        }
-                    }
-                } else {
-                    placeholderImage
                 }
             } else {
-                placeholderImage
+                
+                localImageFallback(for: imagePathOrURL)
             }
         }
         .frame(height: height)
         .cornerRadius(cornerRadius)
         .clipped()
+    }
+
+    private func getLocalImageURL(fileName: String) -> URL? {
+        FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first?.appendingPathComponent(fileName)
+    }
+
+    
+    private func localImageFallback(for fileName: String?) -> some View {
+        guard let fileName = fileName else {
+            print("Path nil")
+            return AnyView(placeholderImage)
+        }
+        
+        guard let fileURL = getLocalImageURL(fileName: fileName) else {
+            print("URL oluşturulamadı")
+            return AnyView(placeholderImage)
+        }
+        
+        print("Checking path: \(fileURL.path)")
+        
+        guard FileManager.default.fileExists(atPath: fileURL.path) else {
+            print("Dosya bulunamadı: \(fileURL.path)")
+            return AnyView(placeholderImage)
+        }
+        
+        guard let data = try? Data(contentsOf: fileURL) else {
+            print("Dosya okunamadı: \(fileURL.path)")
+            return AnyView(placeholderImage)
+        }
+        
+        guard let uiImage = UIImage(data: data) else {
+            print("UIImage oluşturulamadı: \(fileURL.path)")
+            return AnyView(placeholderImage)
+        }
+        
+        return AnyView(
+            Image(uiImage: uiImage)
+                .resizable()
+                .scaledToFit()
+        )
+    }
+
+
+
+    private func imageView(image: Image) -> some View {
+        image
+            .resizable()
+            .scaledToFit()
     }
 
     private var placeholderImage: some View {
