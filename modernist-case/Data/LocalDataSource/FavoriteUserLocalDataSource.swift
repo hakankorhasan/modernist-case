@@ -19,7 +19,15 @@ final class FavoriteUserLocalDataSource {
     // MARK: - Public Methods
 
     @discardableResult
-    func add(user: User) -> Bool {
+    func add(user: User) throws -> Bool {
+        guard let userId = user.id?.value, !userId.isEmpty else {
+            throw FavoriteUserError.saveFailed("User ID is missing")
+        }
+
+        if isFavorite(userIdValue: userId) {
+            throw FavoriteUserError.alreadyExists
+        }
+        
         let entity = FavoriteUserEntity(context: context)
         configureEntity(entity, from: user)
         
@@ -28,7 +36,7 @@ final class FavoriteUserLocalDataSource {
             return true
         } catch {
             print("❌ [CoreData] Failed to save favorite user: \(error.localizedDescription)")
-            return false
+            throw FavoriteUserError.saveFailed(error.localizedDescription)
         }
     }
 

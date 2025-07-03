@@ -28,7 +28,11 @@ final class FavoriteUsersRepositoryImpl: FavoriteUsersRepository {
     func add(user: User) -> AnyPublisher<Void, Never> {
         guard let thumbnailURLString = user.picture?.thumbnail,
               let url = URL(string: thumbnailURLString) else {
-            localDataSource.add(user: user)
+            do {
+                _ = try localDataSource.add(user: user)
+            } catch {
+                print("Failed to add user locally: \(error)")
+            }
             return Just(()).eraseToAnyPublisher()
         }
 
@@ -40,9 +44,9 @@ final class FavoriteUsersRepositoryImpl: FavoriteUsersRepository {
                 if ImageCacheManager.shared.saveImageToDisk(imageData: data, fileName: fileName) != nil {
                     var userWithLocalPath = user
                     userWithLocalPath.picture?.thumbnail = fileName
-                    _ = self.localDataSource.add(user: userWithLocalPath)
+                    _ = try? self.localDataSource.add(user: userWithLocalPath)
                 } else {
-                    _ = self.localDataSource.add(user: user)
+                    _ = try? self.localDataSource.add(user: user)
                 }
             })
             .map { _ in () }

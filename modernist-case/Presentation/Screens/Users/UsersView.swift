@@ -17,6 +17,8 @@ struct UsersView: View {
                 // SearchBar
                 SearchBarView(text: $usersViewModel.searchText)
                 
+                Spacer()
+                
                 if usersViewModel.isLoading {
                     ProgressView("Loading users...")
                         .progressViewStyle(CircularProgressViewStyle())
@@ -42,14 +44,15 @@ struct UsersView: View {
                         usersViewModel.loadFavorites()
                     }
                 }
+                
+                Spacer()
             }
             .navigationTitle("Users")
-            .task {
-                await usersViewModel.loadUsers()
+            .onAppear {
+                 usersViewModel.loadUsers()
             }
         }
     }
-
 }
 
 #Preview {

@@ -8,8 +8,6 @@
 import Combine
 import Foundation
 
-import Combine
-import Foundation
 
 @MainActor
 class UsersViewModel: ObservableObject {
