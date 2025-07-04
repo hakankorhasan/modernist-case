@@ -98,9 +98,19 @@ class UsersViewModel: ObservableObject {
         if searchText.isEmpty {
             filteredUsers = users
         } else {
-            filteredUsers = users.filter {
-                $0.id?.name?.lowercased().contains(searchText.lowercased()) ?? false
+            let lowercasedSearchText = searchText.lowercased()
+            filteredUsers = users.filter { user in
+                let fullName = [
+                    user.name?.title,
+                    user.name?.first,
+                    user.name?.last
+                ]
+                .compactMap { $0?.lowercased() }
+                .joined(separator: " ")
+
+                return fullName.contains(lowercasedSearchText)
             }
         }
     }
+
 }
