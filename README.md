@@ -13,17 +13,6 @@ A sample iOS application built using **SwiftUI**, **Combine**, and **Core Data**
 - Reactive programming with **Combine**
 - Dependency Injection with a centralized container
 
-## 📷 Screenshots
-
-### Users View
-![Users View](Resources/users.png)
-
-### Favorites View
-![Favorites View](Resources/favorites.png)
-
-### Details View
-![Details View](Resources/details.png)
-
 ---
 
 ## ✨ Features
