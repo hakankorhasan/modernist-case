@@ -49,7 +49,8 @@ struct UsersView: View {
             }
             .navigationTitle("Users")
             .onAppear {
-                 usersViewModel.loadUsers()
+                usersViewModel.loadUsers()
+                usersViewModel.searchText = ""
             }
         }
     }
