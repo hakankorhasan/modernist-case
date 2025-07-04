@@ -4,7 +4,7 @@ A sample iOS application built using **SwiftUI**, **Combine**, and **Core Data**
 
 ---
 
-## 📌 About the Project
+##  About the Project
 
 **Modernist Case** is a SwiftUI-based app that fetches users from a remote source and allows users to manage a favorites list.
 
@@ -17,13 +17,13 @@ A sample iOS application built using **SwiftUI**, **Combine**, and **Core Data**
 
 ## ✨ Features
 
-- ✅ User Listing** – Fetches and displays users from a remote API  
-- 🔍 **Search Functionality** – Filter users by name  
-- ⭐️ **Favorites Management** – Add/remove users from favorites  
-- 💾 **Persistent Storage** – Stores favorites using Core Data  
-- 🔁 **Reactive Updates** – Real-time UI updates using Combine  
-- 🧩 **Modular Architecture** – Domain, Data, and Presentation layers  
-- 🧭 **Navigation** – SwiftUI’s `NavigationStack` with custom route management
+-  User Listing** – Fetches and displays users from a remote API  
+-  **Search Functionality** – Filter users by name  
+-  **Favorites Management** – Add/remove users from favorites  
+-  **Persistent Storage** – Stores favorites using Core Data  
+-  **Reactive Updates** – Real-time UI updates using Combine  
+-  **Modular Architecture** – Domain, Data, and Presentation layers  
+-  **Navigation** – SwiftUI’s `NavigationStack` with custom route management
 
 ## 🏗 Architecture
 
@@ -74,13 +74,13 @@ flowchart TD
    - or **LocalDataSource** for CoreData
 4. Results are published with **Combine** to the UI
 
-### 🔧 Dependency Injection
+###  Dependency Injection
 
 - Dependencies are registered centrally using `AppDIContainer`
 - `MainTabView` injects dependencies manually into ViewModels using `@StateObject`
 - This keeps view initialization simple and flexible, and improves testability
 
-## 🧭 Custom Navigation
+##  Custom Navigation
 
 The project uses a centralized navigation system called `GlobalNavigationManager`, instead of relying directly on SwiftUI's `NavigationLink` everywhere. This provides better control and decouples navigation logic from the view layer.
 
@@ -126,26 +126,26 @@ protocol APIClient {
 }
 ```
 
-### 🚀 NetworkService
+###  NetworkService
 
 `NetworkService` is a singleton implementation of the `APIClient` protocol, responsible for making HTTP requests, decoding responses, and handling network-related errors.
 
-#### 🔑 Key Features
+####  Key Features
 
-- ✅ **Combine-based networking** using `URLSession`.
-- ✅ **Automatic JSON decoding** with `JSONDecoder`, using:
+-  **Combine-based networking** using `URLSession`.
+-  **Automatic JSON decoding** with `JSONDecoder`, using:
   - `keyDecodingStrategy = .convertFromSnakeCase`
   - `dateDecodingStrategy = .iso8601`
-- ✅ **HTTP status code validation**:
+-  **HTTP status code validation**:
   - Handles `2xx` success
   - Throws appropriate errors for `4xx` and `5xx`
-- ✅ **Detailed logging** for debugging:
+-  **Detailed logging** for debugging:
   - Request method, URL, headers, and body
   - Response status code and pretty-printed JSON
-- ✅ **Error handling** via a custom `NetworkError` enum:
+-  **Error handling** via a custom `NetworkError` enum:
   - `.decodingError`, `.unauthorized`, `.notFound`, `.serverError`, `.urlError`, `.unknown`, etc.
 
-#### 🧪 Example Usage
+####  Example Usage
 
 ```swift
 NetworkService.shared
