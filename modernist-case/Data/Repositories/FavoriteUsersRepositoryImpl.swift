@@ -5,35 +5,58 @@
 //  Created by Hakan on 1.07.2025.
 //
 
-protocol FavoriteUsersRepository {
-    func add(user: User)
-    func remove(userId: String)
-    func isFavorite(userId: String) -> Bool
-    func getAllFavorites() -> [User]
-}
+import Combine
+import Foundation
 
 final class FavoriteUsersRepositoryImpl: FavoriteUsersRepository {
-
+    
     private let localDataSource: FavoriteUserLocalDataSource
-
+    
     static let shared = FavoriteUsersRepositoryImpl(localDataSource: FavoriteUserLocalDataSource.shared)
     
     init(localDataSource: FavoriteUserLocalDataSource = FavoriteUserLocalDataSource()) {
         self.localDataSource = localDataSource
     }
+    
+    func add(user: User) -> AnyPublisher<Void, Never> {
+        guard let thumbnailURLString = user.picture?.thumbnail,
+              let url = URL(string: thumbnailURLString) else {
+            do {
+                _ = try localDataSource.add(user: user)
+            } catch {
+                print("Failed to add user locally: \(error)")
+            }
+            return Just(()).eraseToAnyPublisher()
+        }
 
-    func add(user: User) {
-        localDataSource.add(user: user)
+        return URLSession.shared.dataTaskPublisher(for: url)
+            .map(\.data)
+            .handleEvents(receiveOutput: { [weak self] data in
+                guard let self = self else { return }
+                let fileName = "\(user.login?.uuid ?? UUID().uuidString).jpg"
+                if ImageCacheManager.shared.saveImageToDisk(imageData: data, fileName: fileName) != nil {
+                    var userWithLocalPath = user
+                    userWithLocalPath.picture?.thumbnail = fileName
+                    _ = try? self.localDataSource.add(user: userWithLocalPath)
+                } else {
+                    _ = try? self.localDataSource.add(user: user)
+                }
+            })
+            .map { _ in () }
+            .replaceError(with: ())
+            .eraseToAnyPublisher()
     }
 
+    
+    
     func remove(userId: String) {
         localDataSource.remove(userIdValue: userId)
     }
-
+    
     func isFavorite(userId: String) -> Bool {
         localDataSource.isFavorite(userIdValue: userId)
     }
-
+    
     func getAllFavorites() -> [User] {
         let entities = localDataSource.getAllFavorites()
         

@@ -9,37 +9,54 @@ import Combine
 
 final class FavoritesViewModel: ObservableObject {
     
-    @Published var isFavorite: Bool = false
     @Published var favoriteUsers: [User] = []
+    @Published var isFavorite: Bool = false
 
-    private var addFavoriteUseCase = AddFavoriteUserUseCase.shared
-    private let removeFavoriteUseCase =  RemoveFavoriteUserUseCase.shared
-    private let isFavoriteFavoriteUseCase = IsFavoriteUserUseCase.shared
-    private let getAllFavoritesUseCase = GetAllFavoriteUsersUseCase.shared
-
+    private let addFavoriteUseCase: AddFavoriteUserUseCase
+    private let removeFavoriteUseCase: RemoveFavoriteUserUseCase
+    private let isFavoriteUseCase: IsFavoriteUserUseCase
+    private let getAllFavoritesUseCase: GetAllFavoriteUsersUseCase
     
     private var cancellables = Set<AnyCancellable>()
    
-    init() {
-        self.fetchFavorites()
+    init(
+        addFavoriteUseCase: AddFavoriteUserUseCase,
+        removeFavoriteUseCase: RemoveFavoriteUserUseCase,
+        isFavoriteUseCase: IsFavoriteUserUseCase,
+        getAllFavoritesUseCase: GetAllFavoriteUsersUseCase
+    ) {
+        self.addFavoriteUseCase = addFavoriteUseCase
+        self.removeFavoriteUseCase = removeFavoriteUseCase
+        self.isFavoriteUseCase = isFavoriteUseCase
+        self.getAllFavoritesUseCase = getAllFavoritesUseCase
+        
+        fetchFavorites()
     }
     
     func fetchFavorites() {
-        do {
-            favoriteUsers = getAllFavoritesUseCase.execute()
-            print(favoriteUsers)
-        } catch {
-            print("error")
-        }
+        getAllFavoritesUseCase.execute()
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                if case .failure(let error) = completion {
+                    print("Error fetching favorites: \(error.localizedDescription)")
+                }
+            } receiveValue: { [weak self] users in
+                self?.favoriteUsers = users
+            }
+            .store(in: &cancellables)
     }
     
     func removeFromFavorites(user: User) {
-        
-        do {
-            removeFavoriteUseCase.execute(userId: user.id?.value ?? "")
-            fetchFavorites()
-        } catch {
-            print("Remove failed")
-        }
+        guard let userId = user.id?.value else { return }
+        removeFavoriteUseCase.execute(userId: userId)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                if case .failure(let error) = completion {
+                    print("Error removing favorite: \(error.localizedDescription)")
+                }
+            } receiveValue: { [weak self] in
+                self?.fetchFavorites()
+            }
+            .store(in: &cancellables)
     }
 }

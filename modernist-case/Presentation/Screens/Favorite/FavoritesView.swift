@@ -10,9 +10,6 @@ import SwiftUI
 struct FavoritesView: View {
     @StateObject var viewModel: FavoritesViewModel
 
-    init(viewModel: FavoritesViewModel = FavoritesViewModel()) {
-        _viewModel = StateObject(wrappedValue: viewModel)
-    }
 
     var body: some View {
         NavigationView {
@@ -47,5 +44,12 @@ struct FavoritesView: View {
 }
 
 #Preview {
-    FavoritesView(viewModel: FavoritesViewModel())
+    FavoritesView(
+            viewModel: FavoritesViewModel(
+                addFavoriteUseCase: AppDIContainer.shared.addFavoriteUserUseCase,
+                removeFavoriteUseCase: AppDIContainer.shared.removeFavoriteUserUseCase,
+                isFavoriteUseCase: AppDIContainer.shared.isFavoriteUserUseCase,
+                getAllFavoritesUseCase: AppDIContainer.shared.getAllFavoriteUsersUseCase
+            )
+        )
 }

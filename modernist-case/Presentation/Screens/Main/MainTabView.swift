@@ -9,18 +9,33 @@ import SwiftUI
 
 struct MainTabView: View {
     @StateObject private var nav = GlobalNavigationManager.shared
-    @StateObject var usersVM = UsersViewModel()
+
+    // Burada DI container'dan aldığın use case'lerle oluştur
+    @StateObject private var usersVM = UsersViewModel(
+        fetchUserUseCase: AppDIContainer.shared.fetchUsersUseCase,
+        addFavoriteUseCase: AppDIContainer.shared.addFavoriteUserUseCase,
+        removeFavoriteUseCase: AppDIContainer.shared.removeFavoriteUserUseCase,
+        getAllFavoritesUseCase: AppDIContainer.shared.getAllFavoriteUsersUseCase
+    )
+    
+    @StateObject private var favoritesVM = FavoritesViewModel(
+        addFavoriteUseCase: AppDIContainer.shared.addFavoriteUserUseCase,
+        removeFavoriteUseCase: AppDIContainer.shared.removeFavoriteUserUseCase,
+        isFavoriteUseCase: AppDIContainer.shared.isFavoriteUserUseCase,
+        getAllFavoritesUseCase: AppDIContainer.shared.getAllFavoriteUsersUseCase
+    )
+
     @State private var selectedTab: Int = 0
 
     var body: some View {
         NavigationStack(path: $nav.fullCoverPath) {
             TabView(selection: $selectedTab) {
-                UsersView(usersViewModel: UsersViewModel())
+                UsersView(usersViewModel: usersVM) 
                     .tag(0)
                     .tabItem {
                         Label("Users", systemImage: "person.3")
                     }
-                FavoritesView()
+                FavoritesView(viewModel: favoritesVM)
                     .tag(1)
                     .tabItem {
                         Label("Favorites", systemImage: "star")
@@ -34,12 +49,11 @@ struct MainTabView: View {
                 case .users:
                     UsersView(usersViewModel: usersVM)
                 case .favorites:
-                    FavoritesView()
+                    FavoritesView(viewModel: favoritesVM)
                 case .userDetails(let user):
                     UserDetailsView(user: user)
                 }
             }
         }
-
     }
 }

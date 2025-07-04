@@ -22,18 +22,14 @@ struct UserDetailsView: View {
                 // Name
                 HStack {
                     Spacer()
-                    if let urlString = user.picture?.large, let url = URL(string: urlString) {
-                        AsyncImage(url: url)
-                            .scaledToFit()
-                            .cornerRadius(AppConstants.CornerRadius.medium)
-                    } else {
-                        Image(systemName: "person.fill") // fallback image
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: AppConstants.Size.buttonHeight64)
-                            .cornerRadius(AppConstants.CornerRadius.medium)
-                            .clipped()
-                    }
+                    
+                    UserImageView(
+                        imagePathOrURL: user.picture?.thumbnail,
+                        height: AppConstants.Size.buttonHeight64,
+                        cornerRadius: AppConstants.CornerRadius.medium
+                    )
+
+                    
                     Spacer()
                 }
                 
@@ -120,7 +116,17 @@ struct UserDetailsView: View {
             }
         }
     }
+    
+    private var placeholderImage: some View {
+        Image(systemName: "person.fill")
+            .resizable()
+            .scaledToFit()
+            .frame(height: 200)
+            .cornerRadius(AppConstants.CornerRadius.medium)
+            .clipped()
+    }
 }
+
 
 #Preview {
     UserDetailsView(user: User(

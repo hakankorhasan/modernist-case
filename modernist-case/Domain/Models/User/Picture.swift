@@ -5,7 +5,7 @@
 //  Created by Hakan on 2.07.2025.
 //
 struct Picture: Codable, Hashable {
-    let large: String?
-    let medium: String?
-    let thumbnail: String?
+    var large: String?
+    var medium: String?
+    var thumbnail: String?
 }
