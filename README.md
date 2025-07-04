@@ -46,7 +46,7 @@ A sample iOS application built using **SwiftUI**, **Combine**, and **Core Data**
 
 ## ✨ Features
 
--  User Listing** – Fetches and displays users from a remote API  
+-  **User Listing** – Fetches and displays users from a remote API  
 -  **Search Functionality** – Filter users by name  
 -  **Favorites Management** – Add/remove users from favorites  
 -  **Persistent Storage** – Stores favorites using Core Data  
