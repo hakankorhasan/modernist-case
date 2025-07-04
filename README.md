@@ -29,6 +29,42 @@ A sample iOS application built using **SwiftUI**, **Combine**, and **Core Data**
 
 The project follows a **Clean Architecture** approach with distinct layers for **Domain**, **Data**, and **Presentation**. It promotes separation of concerns, testability, and scalability for larger applications.
 
+## 📊 Diagram
+
+```mermaid
+flowchart TD
+    subgraph Presentation["Presentation Layer"]
+        UV[UsersView]
+        UVM[UsersViewModel]
+    end
+
+    subgraph Domain["Domain Layer"]
+        UC[UseCases]
+        UC -->|Fetch, Add, Remove| UCF[FetchUsersUseCase, AddFavoriteUserUseCase, RemoveFavoriteUserUseCase]
+    end
+
+    subgraph Data["Data Layer"]
+        R[Repositories]
+        R -->|Uses| UR[UserRepositoryImpl, FavoriteUserRepositoryImpl]
+        DS[DataSources]
+        DS -->|Remote| RD[UserRemoteDataSource]
+        DS -->|Local| LD[FavoriteUserLocalDataSource]
+    end
+
+    subgraph NetworkPersistence["Network & Persistence"]
+        NS[NetworkService / APIClient]
+        CD[CoreDataStack / Entities]
+    end
+
+    %% Flow arrows
+    UV --> UVM
+    UVM --> UC
+    UC --> R
+    R --> DS
+    RD --> NS
+    LD --> CD
+```
+
 ### 🔄 Data Flow
 
 1. **ViewModel** (e.g., `UsersViewModel`) interacts with **UseCases**
